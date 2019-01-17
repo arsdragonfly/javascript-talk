@@ -1,6 +1,15 @@
 let zero = f => x => x
 
+let one = f => x => f(x)
+let two = f => x => f(f(x))
+let three = f => x => f(f(f(x)))
+
 let duck = (_) => console.log('quack!')
+
+let succ = n => f => x => f(n(f)(x))
+let add = a => b => a(succ)(b)
+let mult = a => b => a(add(b))(zero)
+let exp = a => b => a(mult(b))(succ(zero))
 
 let prepend = h => r => sel => sel(h)(r)
 let head = l => l(h => r => h)
@@ -50,3 +59,28 @@ let foldr = builder => initial_value => {
 let toString_ = foldr(buildString)('')
 let toSum_ = foldr(buildSum)(0)
 let toProduct_ = foldr(buildProduct)(1)
+
+let hook = () => undefined
+
+let attach = hook => f => () => {
+    hook()
+    return f()
+}
+
+hook = attach(hook)(() => console.log('Oink!'))
+hook = attach(hook)(() => console.log('Moo!'))
+hook = attach(hook)(() => console.log('Meow!'))
+
+let hook2 = err => next => next()
+
+let attach2 = hook => f => 
+err => next => hook(err)(() => f(err)(next))
+
+hook2 = attach2(hook2)(err => next => err("Always errs"))
+hook2 = attach2(hook2)(err => next => {
+    console.log("Won't print!")
+    return next()
+})
+
+let e = x => console.log(`Error: ${x}`)
+let n = () => console.log("Success!")
