@@ -120,14 +120,107 @@ let nmap = f => {
 
 ---
 
-# Here's a binary tree!
+# Here's (more than) a singly linked list!
 
 ---
 
 ```javascript
-let tree = l => r => sel => sel(l)(r)
-let left = l => r => l
-let right = l => r => r
+let prepend = l => r => sel => sel(l)(r)
+let head = l => r => l
+let rest = l => r => r
 ```
 
 ---
+
+# Let's see how it works:
+
+```javascript
+null // []
+prepend(0)(null) // [0]
+prepend(1)(prepend(0)(null)) // [1, 0]
+```
+
+---
+
+# How do we print the list?
+
+```javascript
+let toString = l => {
+    if (l === null)
+    {
+        return ''
+    }
+    else
+    {
+        return `${head(l)} ${print(rest(l))}`
+    }
+}
+```
+
+---
+
+# How do we sum over the list?
+
+```javascript
+let toSum = l => {
+    if (l === null)
+    {
+        return 0
+    }
+    else
+    {
+        return head(l) + toSum(rest(l))
+    }
+}
+```
+
+---
+
+# How do we calculate the elements' product?
+
+```javascript
+let toProduct = l => {
+    if (l === null)
+    {
+        return 1
+    }
+    else
+    {
+        return head(l) * toProduct(rest(l))
+    }
+}
+```
+
+---
+
+# Is there a pattern?
+
+---
+
+# We have:
+- # an initial value (base case)
+- # some process that builds a new value out of the old one
+
+
+---
+
+# The initial value:
+- # toString: ''
+- # toSum: 0
+- # toProduct: 1
+
+---
+
+# 
+
+---
+
+# Event Emitter
+
+---
+
+# Monads
+
+---
+
+# 
