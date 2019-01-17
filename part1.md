@@ -22,101 +22,23 @@ Higher order functions
 
 ---
 
-# And
-
 # `let identity = x => x`
 
 ---
 
-# How about another name?
+# What's this?
 
-# `let zero = x => x`
-
----
-
-# Meet our new friend!
-
-# `let K = x => (y => x)`
+# `let zero = f => (x => x)`
 
 ---
 
-# What is, say, `K(1)`?
+# `let zero = f => (x => x)` is a function that takes an argument `f` and returns the identity function.
+
+# It's the same as `let zero = f => x => x`
 
 ---
 
-# `(x => (y => x))(1)`
-# `(y => 1)`
-
 ---
-
-# `K(1)` is a function that takes an argument and returns 1.
-
----
-
-# What about K(K) ?
-
----
-
-# `K(1)` is a function that takes an argument and returns 1.
-# `K(K)` is a function that takes an argument and returns K.
-# How about K(K(1))?
-
----
-
-# `K(K(1))` is a function that takes an argument and returns _K(1)_.
-
----
-
-# # `K(K(1))` is a function that takes an argument and returns a function that takes an argument and returns 1.
-
----
-# And a few more!
-
-# `let one = K(zero)`
-# `let two = K(K(zero))`
-# `let seven = K(K(K(K(K(K(K(zero)))))))`
-
----
-
-# Here's a function that adds 1 to a number
-# `let add1 = x => K(x)`
-# What would be a function that substracts 1 from a number?
-
----
-
-# `let sub1 = x => x()`
-
----
-
-# A duck popped up!
-
-# `let duck = () => console.log('quack!')`
-
----
-
-# how to let it quack for $n$ times?
-
----
-
-# `let nmap = f => ...`
-
----
-
-```javascript
-let nmap = f => {
-    let g = n => (n === zero ? g(n(f())) : zero)
-    return g
-}
-```
----
-
-# `nmap(one)(duck)`
-> quack!
-# `nmap(two)(duck)`
-> quack!
-> quack!
-# `nmap(zero)(duck)`
-> 
 
 ---
 
@@ -146,13 +68,10 @@ prepend(1)(prepend(0)(null)) // [1, 0]
 
 ```javascript
 let toString = l => {
-    if (l === null)
-    {
+    if (l === null) {
         return ''
-    }
-    else
-    {
-        return `${head(l)} ${print(rest(l))}`
+    } else {
+        return `${head(l)} ${toString(rest(l))}`
     }
 }
 ```
@@ -163,12 +82,9 @@ let toString = l => {
 
 ```javascript
 let toSum = l => {
-    if (l === null)
-    {
+    if (l === null) {
         return 0
-    }
-    else
-    {
+    } else {
         return head(l) + toSum(rest(l))
     }
 }
@@ -180,12 +96,9 @@ let toSum = l => {
 
 ```javascript
 let toProduct = l => {
-    if (l === null)
-    {
+    if (l === null) {
         return 1
-    }
-    else
-    {
+    } else {
         return head(l) * toProduct(rest(l))
     }
 }
@@ -211,7 +124,50 @@ let toProduct = l => {
 
 ---
 
-# 
+# How do we build a new value?
+
+```javascript
+buildString = h => r => ...
+buildSum = h => r => ...
+buildProduct = h => r => ...
+```
+
+---
+
+# How do we build a new value?
+
+```javascript
+buildString = h => r => `${h} ${r}`
+buildSum = h => r => h + r
+buildProduct = h => r => h * r
+```
+
+---
+
+# And then?
+
+```javascript
+let foldr = builder => initial_value => {
+    let g = l => {
+        if (l === null) {
+            return initial_value
+        } else {
+            return builder(head(l))(g(rest(l)))
+        }
+    }
+    return g
+}
+```
+
+---
+
+# Thus...
+
+```javascript
+let toString_ = foldr(buildString)('')
+let toSum_ = foldr(buildSum)(0)
+let toProduct_ = foldr(buildProduct)(1)
+```
 
 ---
 
@@ -219,8 +175,8 @@ let toProduct = l => {
 
 ---
 
-# Monads
+# Useful resources
 
----
-
-# 
+- [Learn You A Haskell For Great Good](learnyouahaskell.com)
+- [The Little Schemer](https://mitpress.mit.edu/books/little-schemer-fourth-edition)
+- [Lodash](lodash.com)
